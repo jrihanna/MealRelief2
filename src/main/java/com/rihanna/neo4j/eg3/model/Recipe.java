@@ -3,7 +3,6 @@ package com.rihanna.neo4j.eg3.model;
 import java.util.List;
 import java.util.Set;
 
-import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
@@ -14,7 +13,7 @@ public class Recipe {
 
 	@Id
 	@GeneratedValue
-	@GraphId
+	//@GraphId
 	private Long id;
 	
 	private String name;
@@ -22,10 +21,14 @@ public class Recipe {
 	private String instructions;
 	
 	@Relationship(type = "includes", direction = Relationship.OUTGOING)
-	private List<Ingredient> ingredients;
+	private List<IngredientQuantity> ingredients;
 	
 	@Relationship(type = "relates", direction = Relationship.OUTGOING)
 	private Set<Tag> tags;
+	
+	public void includes(List<IngredientQuantity> ingredients) {
+		
+	}
 
 	public Long getId() {
 		return id;
@@ -51,11 +54,11 @@ public class Recipe {
 		this.instructions = instructions;
 	}
 
-	public List<Ingredient> getIngredients() {
+	public List<IngredientQuantity> getIngredients() {
 		return ingredients;
 	}
 
-	public void setIngredients(List<Ingredient> ingredients) {
+	public void setIngredients(List<IngredientQuantity> ingredients) {
 		this.ingredients = ingredients;
 	}
 
