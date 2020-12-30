@@ -26,9 +26,8 @@ public class Recipe {
 	@Relationship(type = "relates", direction = Relationship.OUTGOING)
 	private Set<Tag> tags;
 	
-	public void includes(List<IngredientQuantity> ingredients) {
-		
-	}
+	@Relationship(type = "total_nutritions", direction = Relationship.UNDIRECTED)
+	private NutritionalValue nutritionalValue;
 
 	public Long getId() {
 		return id;
@@ -68,5 +67,13 @@ public class Recipe {
 
 	public void setTags(Set<Tag> tags) {
 		this.tags = tags;
+	}
+
+	public NutritionalValue getNutritionalValue() {
+		return nutritionalValue;
+	}
+
+	public void setNutritionalValue(NutritionalValue nutritionalValue) {
+		this.nutritionalValue = nutritionalValue;
 	}
 }

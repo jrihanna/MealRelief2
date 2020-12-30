@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,6 +29,11 @@ public class RecipeController {
 	
 	@PostMapping(path = "/add")
     public void addRecipe(@RequestBody Recipe recipe) {
-    	recipeService.addNewRecipe(recipe);
+    	recipeService.saveOrUpdateRecipe(recipe);
+    }
+	
+	@PutMapping(path = "/update")
+    public void updateRecipe(@RequestBody Recipe recipe) {
+    	recipeService.saveOrUpdateRecipe(recipe);
     }
 }

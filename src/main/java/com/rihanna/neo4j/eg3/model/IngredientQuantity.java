@@ -16,14 +16,14 @@ public class IngredientQuantity {
 	private Long id;
 	
 	@StartNode
-	Recipe recipe;
+	private Recipe recipe;
 	
     @EndNode
 	@TargetNode
-    Ingredient ingredient;
+	private Ingredient ingredient;
     
     @Property
-    String quantity;
+    private float quantity;
     
 
 	public Long getId() {
@@ -44,10 +44,10 @@ public class IngredientQuantity {
 	public void setIngredient(Ingredient ingredient) {
 		this.ingredient = ingredient;
 	}
-	public String getQuantity() {
+	public float getQuantity() {
 		return quantity;
 	}
-	public void setQuantity(String quantity) {
+	public void setQuantity(float quantity) {
 		this.quantity = quantity;
 	}
     
