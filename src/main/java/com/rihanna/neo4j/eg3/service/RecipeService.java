@@ -42,7 +42,7 @@ public class RecipeService {
 //    	awardRepository.save(national);
     	
     	
-    	ingredientQuantityRepository.saveAll(recipe.getIngredients());
+//    	ingredientQuantityRepository.saveAll(recipe.getIngredients());
     	recipeRepository.save(recipe);
     }
 }
