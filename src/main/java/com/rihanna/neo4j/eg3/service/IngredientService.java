@@ -14,20 +14,17 @@ public class IngredientService {
 	@Autowired
 	IngredientRepository ingredientRepository;
 	
-	public Ingredient loadIngredient(Ingredient ingredient) {
-		Optional<Ingredient> op = ingredientRepository.findOneByName(ingredient.getName());
-		if(op.isPresent())
-			return op.get();
-		return null;
+	public Optional<Ingredient> loadIngredient(Ingredient ingredient) {
+		return ingredientRepository.findOneByName(ingredient.getName());
 	}
 	
 	public void saveOrUpdateIngredient(Ingredient ingredient) {
-		Ingredient current = loadIngredient(ingredient);
-		if(current != null) {
-			ingredient.getNutritionalValue().setId(current.getNutritionalValue().getId());
-			ingredient.setId(current.getId());
-		}
-		ingredientRepository.save(ingredient);
+		Optional<Ingredient> current = loadIngredient(ingredient);
+		current.ifPresent(currentIngredient -> {
+			ingredient.getNutritionalValue().setId(currentIngredient.getNutritionalValue().getId());
+			ingredient.setId(currentIngredient.getId());
+			ingredientRepository.save(ingredient);
+		});
 	}
 
 }

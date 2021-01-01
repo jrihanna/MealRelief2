@@ -2,7 +2,7 @@ package com.rihanna.neo4j.eg3.enumeration;
 
 public enum TagEnum {
 	
-	VEGETARIAN("Vegetarian"),VEGAN("Vegan"), PISCATERIAN("Piscaterian");
+	VEGETARIAN("Vegetarian"),VEGAN("Vegan"), PISCATERIAN("Piscaterian"), KETO("Keto");
 	
 	private TagEnum(String value) {
 		this.value = value;

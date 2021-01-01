@@ -3,13 +3,16 @@ package com.rihanna.neo4j.eg3.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import com.rihanna.neo4j.eg3.model.Ingredient;
 import com.rihanna.neo4j.eg3.model.IngredientQuantity;
 import com.rihanna.neo4j.eg3.model.Recipe;
+import com.rihanna.neo4j.eg3.model.Tag;
 import com.rihanna.neo4j.eg3.repository.RecipeRepository;
 
 @Service
@@ -39,22 +42,37 @@ public class RecipeService {
     	
     }
     
+    public List<Recipe> searchRecipe(Recipe recipe) {
+    	return recipeRepository.findAll(Example.of(recipe));
+    }
+    
+    public void tagRecipe(Tag tag, Long id) {
+    	Optional<Recipe> recOp = recipeRepository.findById(id);
+    	recOp.ifPresent(rec -> {
+    		rec.getTags().add(tag);
+    		recipeRepository.save(rec);
+    	});
+    }
+    
+    public void untagRecipe(Tag tag, Long id) {
+    	Optional<Recipe> recOp = recipeRepository.findById(id);
+    	recOp.ifPresent(rec -> {
+    		rec.getTags().remove(tag);
+    		recipeRepository.save(rec);
+    	});
+    }
+    
     private List<IngredientQuantity> loadIngredients(Recipe recipe) {
     	
     	List<IngredientQuantity> newIngre = new ArrayList<IngredientQuantity>();
     	
     	recipe.getIngredients().stream().forEach(ingQuan -> {
-    		Ingredient ing = ingredientService.loadIngredient(ingQuan.getIngredient());
-			ingQuan.setIngredient(ing);
-			newIngre.add(ingQuan);
+    		Optional<Ingredient> ingOp = ingredientService.loadIngredient(ingQuan.getIngredient());
+			ingOp.ifPresent(ing -> {
+				ingQuan.setIngredient(ing);
+				newIngre.add(ingQuan);
+			});
     	});
-		
-		/*
-		 * for(IngredientQuantity ingQuan : recipe.getIngredients()) { Ingredient ing =
-		 * ingredientService.loadIngredient(ingQuan.getIngredient());
-		 * 
-		 * ingQuan.setIngredient(ing); newIngre.add(ingQuan); }
-		 */
     	
     	return newIngre;
     }
