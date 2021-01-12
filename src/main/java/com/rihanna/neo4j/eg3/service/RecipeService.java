@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -42,8 +43,20 @@ public class RecipeService {
     	
     }
     
-    public List<Recipe> searchRecipe(Recipe recipe) {
-    	return recipeRepository.findAll(Example.of(recipe));
+    public Collection<Recipe> searchRecipe(Recipe recipe) {
+    	Collection<Recipe> result = recipeRepository.findByName(recipe.getName());
+    	
+    	if(recipe.getIngredients() != null)
+	    	result.addAll(recipeRepository.findByIngredients(
+	    			recipe.getIngredients().stream().map(s -> s.getIngredient().getName()).collect(Collectors.toList())
+	    			));
+    	
+    	if(recipe.getTags() != null)
+	    	result.addAll(recipeRepository.findByTags(
+	    			recipe.getTags().stream().map(s -> s.getName().getValue()).collect(Collectors.toList())
+	    			));
+    			
+    	return result;
     }
     
     public void tagRecipe(Tag tag, Long id) {

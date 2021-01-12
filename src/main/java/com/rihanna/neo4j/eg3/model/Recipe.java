@@ -28,6 +28,19 @@ public class Recipe {
 	
 	@Relationship(type = "total_nutritions", direction = Relationship.UNDIRECTED)
 	private NutritionalValue nutritionalValue;
+	
+	public Recipe() {}
+
+	public Recipe(Long id, String name, String instructions, List<IngredientQuantity> ingredients, Set<Tag> tags,
+			NutritionalValue nutritionalValue) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.instructions = instructions;
+		this.ingredients = ingredients;
+		this.tags = tags;
+		this.nutritionalValue = nutritionalValue;
+	}
 
 	public Long getId() {
 		return id;
