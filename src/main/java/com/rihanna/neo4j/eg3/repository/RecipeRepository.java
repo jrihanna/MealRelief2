@@ -18,7 +18,11 @@ public interface RecipeRepository extends Neo4jRepository<Recipe, Long> {
 	@Query("MATCH (n:Recipe) RETURN n")
     Collection<Recipe> getAllRecipes();
 	
-	@Query("MATCH (n:Recipe) where (n.name contains $recipeName) RETURN n")
+//	@Query("MATCH (n:Recipe) where (n.name contains $recipeName) RETURN n")
+//	@Query("MATCH (n:Recipe)-[r:INGREDIENTS]->(m:Ingredient) where (n.name contains $recipeName) return n,collect(r),collect(m)")
+	@Query("MATCH (nut:NutritionalValue)<-[r2:NUTRITIONAL_VALUE]-(n:Recipe)-[r:INGREDIENTS]->"
+			+ "(m:Ingredient),(n)-[r3:TAGS]->(t:Tag) where (n.name contains $recipeName) "
+			+ "return n,collect(r),collect(m),collect(nut),collect(t),collect(r2),collect(r3)")
 	Collection<Recipe> findByName(String recipeName);
 	
 	@Query("MATCH (n:Recipe)-[:INGREDIENTS]-(m:Ingredient)"
