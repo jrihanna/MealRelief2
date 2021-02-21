@@ -11,12 +11,18 @@ public class Tag {
 	
 	@Id
 	@Index(unique=true, primary=true)
-	private TagEnum name;
+	private String name;
 	
-	public TagEnum getName() {
+	public String getName() {
 		return name;
 	}
-	public void setName(TagEnum name) {
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public Tag() {}
+	public Tag(String name) {
+		super();
 		this.name = name;
 	}
 	

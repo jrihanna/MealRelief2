@@ -2,6 +2,7 @@ package com.rihanna.neo4j.eg3.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,7 +45,10 @@ public class RecipeService {
     }
     
     public Collection<Recipe> searchRecipe(Recipe recipe) {
-    	Collection<Recipe> result = recipeRepository.findByName(recipe.getName());
+    	Collection<Recipe> result = Collections.emptyList();
+    	
+    	if(recipe.getName() != null && recipe.getName().length() > 0)
+    		result = recipeRepository.findByName(recipe.getName());
     	
     	if(recipe.getIngredients() != null)
 	    	result.addAll(recipeRepository.findByIngredients(
@@ -53,7 +57,7 @@ public class RecipeService {
     	
     	if(recipe.getTags() != null)
 	    	result.addAll(recipeRepository.findByTags(
-	    			recipe.getTags().stream().map(s -> s.getName().getValue()).collect(Collectors.toList())
+	    			recipe.getTags().stream().map(s -> s.getName()).collect(Collectors.toList())
 	    			));
     			
     	return result;

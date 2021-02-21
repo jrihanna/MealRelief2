@@ -19,9 +19,8 @@ public interface RecipeRepository extends Neo4jRepository<Recipe, Long> {
     Collection<Recipe> getAllRecipes();
 	
 //	@Query("MATCH (n:Recipe) where (n.name contains $recipeName) RETURN n")
-//	@Query("MATCH (n:Recipe)-[r:INGREDIENTS]->(m:Ingredient) where (n.name contains $recipeName) return n,collect(r),collect(m)")
 	@Query("MATCH (nut:NutritionalValue)<-[r2:NUTRITIONAL_VALUE]-(n:Recipe)-[r:INGREDIENTS]->"
-			+ "(m:Ingredient),(n)-[r3:TAGS]->(t:Tag) where (n.name contains $recipeName) "
+			+ "(m:Ingredient),(n)-[r3:TAGS]->(t:Tag) where (n.name =~ '(?i).*'+$recipeName+'.*') "
 			+ "return n,collect(r),collect(m),collect(nut),collect(t),collect(r2),collect(r3)")
 	Collection<Recipe> findByName(String recipeName);
 	
@@ -34,7 +33,7 @@ public interface RecipeRepository extends Neo4jRepository<Recipe, Long> {
 	Collection<Recipe> findByTags(List<String> tagNames);
 	
 
-	@Query("MATCH (n:Recipe) where (n.name contains $recipeName) RETURN n "
+	@Query("MATCH (n:Recipe) where (n.name =~ '(?i).*$recipeName.*') RETURN n "
 			+ "UNION ALL MATCH (n:Recipe)-[:INGREDIENTS]-(m:Ingredient) "
 			+ "where (m.name in $ingredientNames) return n "
 			+ "UNION ALL MATCH (n:Recipe)-[:TAGS]-(o:Tag) "

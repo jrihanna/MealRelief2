@@ -8,6 +8,8 @@ import org.neo4j.ogm.annotation.Relationship;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 
+import com.rihanna.neo4j.eg3.enumeration.CategoryEnum;
+
 @NodeEntity
 public class Recipe {
 
@@ -17,14 +19,17 @@ public class Recipe {
 	private Long id;
 	
 	private String name;
-	
 	private String instructions;
+	private String iconSrc;
 	
 	@Relationship(type = "includes", direction = Relationship.OUTGOING)
 	private List<IngredientQuantity> ingredients;
 	
 	@Relationship(type = "relates", direction = Relationship.OUTGOING)
 	private Set<Tag> tags;
+	
+	@Relationship(type = "isA", direction = Relationship.OUTGOING)
+	private CategoryEnum category;
 	
 	@Relationship(type = "total_nutritions", direction = Relationship.UNDIRECTED)
 	private NutritionalValue nutritionalValue;
@@ -88,5 +93,21 @@ public class Recipe {
 
 	public void setNutritionalValue(NutritionalValue nutritionalValue) {
 		this.nutritionalValue = nutritionalValue;
+	}
+
+	public CategoryEnum getCategory() {
+		return category;
+	}
+
+	public void setCategory(CategoryEnum category) {
+		this.category = category;
+	}
+
+	public String getIconSrc() {
+		return iconSrc;
+	}
+
+	public void setIconSrc(String iconSrc) {
+		this.iconSrc = iconSrc;
 	}
 }

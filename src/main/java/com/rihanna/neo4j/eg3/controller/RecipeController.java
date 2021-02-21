@@ -1,8 +1,10 @@
 package com.rihanna.neo4j.eg3.controller;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,14 +46,20 @@ public class RecipeController {
     	return "success";
     }
 	
-	@GetMapping(path = "/search")
-    public @ResponseBody Collection<Recipe> searchRecipe(@RequestBody Recipe recipe) {
+	@GetMapping(path = "/search_")
+    public @ResponseBody Collection<Recipe> searchRecipe_(@RequestBody Recipe recipe) {
     	return recipeService.searchRecipe(recipe);
     }
 	
-	@GetMapping(path = "/search2")
-    public @ResponseBody SearchResult searchRecipe2(@RequestParam String recipeName) {
-		System.out.println(recipeName);
+	@GetMapping(path = "/search")
+    public @ResponseBody SearchResult searchRecipe(
+    			@Nullable @RequestParam String recipeName, 
+    			@Nullable @RequestParam String category,
+    			@Nullable @RequestParam List<String> includedIngredients, 
+    			@Nullable @RequestParam List<String> excludedIngredients, 
+    			@Nullable @RequestParam List<String> tags) {
+		
+		// TODO: if all null then search random 10 recipes
 		Recipe recipe = new Recipe();
 		recipe.setName(recipeName);
 		Collection<Recipe> result = recipeService.searchRecipe(recipe);
@@ -61,6 +69,20 @@ public class RecipeController {
     	return searchResult;
     }
 	
+	@GetMapping(path = "/search_group")
+    public @ResponseBody SearchResult searchGroupRecipe(
+    			@Nullable @RequestParam List<String> includedIngredients, 
+    			@Nullable @RequestParam List<String> excludedIngredients, 
+    			@Nullable @RequestParam List<String> tags) {
+		
+		// TODO: if all null then search random 10 recipes
+		Recipe recipe = new Recipe();
+		Collection<Recipe> result = recipeService.searchRecipe(recipe);
+		
+		SearchResult searchResult = new SearchResult();
+		searchResult.setRecipes(result);
+    	return searchResult;
+    }
 	@PutMapping(path = "/tag/add/{id}")
     public String tagRecipe(@RequestBody Tag tag, @PathVariable Long id) {
     	recipeService.tagRecipe(tag, id);
