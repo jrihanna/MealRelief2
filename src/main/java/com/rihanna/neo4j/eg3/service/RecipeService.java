@@ -8,9 +8,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import com.rihanna.neo4j.eg3.dto.RecipeSearchDTO;
 import com.rihanna.neo4j.eg3.model.Ingredient;
 import com.rihanna.neo4j.eg3.model.IngredientQuantity;
 import com.rihanna.neo4j.eg3.model.Recipe;
@@ -42,6 +42,16 @@ public class RecipeService {
     	recipe.setNutritionalValue(nutritionCalculatorService.calculateNutritionsForRecipe(recipe));
     	recipeRepository.save(recipe);
     	
+    }
+
+    public Collection<Recipe> searchRecipeList(RecipeSearchDTO searchCriteria) {
+    	String query = "MATCH (nut:NutritionalValue)<-[r2:NUTRITIONAL_VALUE]-(n:Recipe)-[r:INGREDIENTS]->"
+    			+ "(m:Ingredient),(n)-[r3:TAGS]->(t:Tag) where (n.name =~ '(?i).*cash.*') "
+    			+ "return n,collect(r) as rr,collect(m) as mm,collect(nut) as nutnut,collect(t) as tt,"
+    			+ " collect(r2) as r2r2,collect(r3) as r3r3";
+    	
+    	Collection<Recipe> result = recipeRepository.findByCriteria(query);
+    	return result;
     }
     
     public Collection<Recipe> searchRecipe(Recipe recipe) {

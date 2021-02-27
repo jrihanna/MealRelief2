@@ -1,6 +1,7 @@
 package com.rihanna.neo4j.eg3.controller;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.rihanna.neo4j.eg3.dto.RecipeSearchDTO;
+import com.rihanna.neo4j.eg3.dto.SearchResult;
 import com.rihanna.neo4j.eg3.model.Recipe;
-import com.rihanna.neo4j.eg3.model.SearchResult;
 import com.rihanna.neo4j.eg3.model.Tag;
 import com.rihanna.neo4j.eg3.service.RecipeService;
+import com.rihanna.neo4j.eg3.util.SearchCriteriaConverter;
 
 @CrossOrigin(origins = {"http://localhost:3000"})
 @Controller
@@ -59,10 +62,17 @@ public class RecipeController {
     			@Nullable @RequestParam List<String> excludedIngredients, 
     			@Nullable @RequestParam List<String> tags) {
 		
-		// TODO: if all null then search random 10 recipes
-		Recipe recipe = new Recipe();
-		recipe.setName(recipeName);
-		Collection<Recipe> result = recipeService.searchRecipe(recipe);
+		Collection<Recipe> result = Collections.emptyList();
+//		Recipe recipe = new Recipe();
+		
+//		if(recipeName == null && category == null && includedIngredients == null 
+//				&& excludedIngredients == null && tags == null)
+//			result = recipeService.searchRecipe(recipe);
+//		else {	
+			RecipeSearchDTO searchCriteria = SearchCriteriaConverter.createListSearchCriteria(recipeName, category,
+	    			includedIngredients, excludedIngredients, tags);
+			result = recipeService.searchRecipeList(searchCriteria);
+//		}
 		
 		SearchResult searchResult = new SearchResult();
 		searchResult.setRecipes(result);

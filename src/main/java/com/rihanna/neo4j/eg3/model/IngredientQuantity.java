@@ -21,6 +21,12 @@ public class IngredientQuantity {
 	@TargetNode
 	private Ingredient ingredient;
     
+//    @Property
+//    private float quantityGr;
+
+    @Property
+    private String quantityMeasure;
+    
     @Property
     private float quantity;
     
@@ -48,6 +54,12 @@ public class IngredientQuantity {
 	}
 	public void setQuantity(float quantity) {
 		this.quantity = quantity;
+	}
+	public String getQuantityMeasure() {
+		return quantityMeasure;
+	}
+	public void setQuantityMeasure(String quantityMeasure) {
+		this.quantityMeasure = quantityMeasure;
 	}
     
     

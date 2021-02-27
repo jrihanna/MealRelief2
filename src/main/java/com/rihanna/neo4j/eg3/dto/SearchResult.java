@@ -1,7 +1,8 @@
-package com.rihanna.neo4j.eg3.model;
+package com.rihanna.neo4j.eg3.dto;
 
 import java.util.Collection;
-import java.util.List;
+
+import com.rihanna.neo4j.eg3.model.Recipe;
 
 
 public class SearchResult {

@@ -1,13 +1,11 @@
 package com.rihanna.neo4j.eg3.repository;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.stereotype.Repository;
 
-import com.rihanna.neo4j.eg3.enumeration.TagEnum;
 import com.rihanna.neo4j.eg3.model.Tag;
 
 @Repository
