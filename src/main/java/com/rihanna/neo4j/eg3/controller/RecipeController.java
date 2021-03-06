@@ -9,6 +9,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.rihanna.neo4j.eg3.controller.model.RecipeModelAttribute;
 import com.rihanna.neo4j.eg3.dto.RecipeSearchDTO;
 import com.rihanna.neo4j.eg3.dto.SearchResult;
 import com.rihanna.neo4j.eg3.model.Recipe;
@@ -55,12 +57,7 @@ public class RecipeController {
     }
 	
 	@GetMapping(path = "/search")
-    public @ResponseBody SearchResult searchRecipe(
-    			@Nullable @RequestParam String recipeName, 
-    			@Nullable @RequestParam String category,
-    			@Nullable @RequestParam List<String> includedIngredients, 
-    			@Nullable @RequestParam List<String> excludedIngredients, 
-    			@Nullable @RequestParam List<String> tags) {
+    public @ResponseBody SearchResult searchRecipe(@ModelAttribute RecipeModelAttribute recipeModelAttribute) {
 		
 		Collection<Recipe> result = Collections.emptyList();
 //		Recipe recipe = new Recipe();
@@ -69,8 +66,7 @@ public class RecipeController {
 //				&& excludedIngredients == null && tags == null)
 //			result = recipeService.searchRecipe(recipe);
 //		else {	
-			RecipeSearchDTO searchCriteria = SearchCriteriaConverter.createListSearchCriteria(recipeName, category,
-	    			includedIngredients, excludedIngredients, tags);
+			RecipeSearchDTO searchCriteria = SearchCriteriaConverter.createListSearchCriteria(recipeModelAttribute);
 			result = recipeService.searchRecipeList(searchCriteria);
 //		}
 		

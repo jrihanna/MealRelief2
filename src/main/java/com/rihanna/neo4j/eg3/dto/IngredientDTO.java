@@ -11,6 +11,8 @@ public class IngredientDTO {
 	private NutritionalValue nutritionalValue;
 	private int perQuantity;
 	
+	public IngredientDTO() {
+	}
 	public IngredientDTO(String name) {
 		this.name = name;
 	}

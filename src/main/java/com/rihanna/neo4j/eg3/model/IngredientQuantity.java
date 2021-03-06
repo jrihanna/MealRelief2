@@ -8,6 +8,8 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.RelationshipProperties;
 import org.springframework.data.neo4j.core.schema.TargetNode;
 
+import com.rihanna.neo4j.eg3.enumeration.MeasurementTypeEnum;
+
 @RelationshipProperties
 public class IngredientQuantity {
 	@Id
@@ -21,14 +23,14 @@ public class IngredientQuantity {
 	@TargetNode
 	private Ingredient ingredient;
     
-//    @Property
-//    private float quantityGr;
-
-    @Property
-    private String quantityMeasure;
-    
     @Property
     private float quantity;
+    
+    @Property
+    private MeasurementTypeEnum measurementType;
+
+    @Property
+    private float quantityGram;
     
 
 	public Long getId() {
@@ -55,12 +57,17 @@ public class IngredientQuantity {
 	public void setQuantity(float quantity) {
 		this.quantity = quantity;
 	}
-	public String getQuantityMeasure() {
-		return quantityMeasure;
+	public MeasurementTypeEnum getMeasurementType() {
+		return measurementType;
 	}
-	public void setQuantityMeasure(String quantityMeasure) {
-		this.quantityMeasure = quantityMeasure;
+	public void setMeasurementType(MeasurementTypeEnum measurementType) {
+		this.measurementType = measurementType;
 	}
-    
+	public float getQuantityGram() {
+		return quantityGram;
+	}
+	public void setQuantityGram(float quantityGram) {
+		this.quantityGram = quantityGram;
+	}
     
 }

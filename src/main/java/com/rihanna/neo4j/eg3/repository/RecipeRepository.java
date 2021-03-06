@@ -7,6 +7,7 @@ import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.stereotype.Repository;
 
+import com.rihanna.neo4j.eg3.dto.RecipeSearchDTO;
 import com.rihanna.neo4j.eg3.model.Recipe;
 
 
@@ -43,10 +44,15 @@ public interface RecipeRepository extends Neo4jRepository<Recipe, Long> {
 	
 //	@Query("CALL custom.recipe('dg') YIELD ripe")
 	@Query("CALL apoc.cypher.run($filterQuery, null) " +
-			"YIELD value as v RETURN v.n, v.rr, v.mm, v.nutnut, v.tt, v.r2r2, v.r3r3")
+			"YIELD value as v RETURN v.n, v.ings, v.ring, v.tas, v.allTags, v.nutts, v.nuts")
 	Collection<Recipe> findByCriteria(String filterQuery);
-//	Collection<Recipe> findByCriteria(RecipeSearchDTO criteria);
 	
+	@Query("call apoc.custom.asProcedure('recipe', procedures.search_by_criteria_func,"
+			+ "'read',[['ripe', 'NODE']], [['name', 'STRING']]); ")
+	void registerProcedure(RecipeSearchDTO criteria);
+	
+	@Query("CALL custom.recipe('dg') YIELD ripe;")
+	Collection<Recipe> findByCriteria2(String filterQuery);
 
 	Collection<Recipe> findByNutritionalValue();
 }

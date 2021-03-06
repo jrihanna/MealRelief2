@@ -16,6 +16,7 @@ import com.rihanna.neo4j.eg3.model.IngredientQuantity;
 import com.rihanna.neo4j.eg3.model.Recipe;
 import com.rihanna.neo4j.eg3.model.Tag;
 import com.rihanna.neo4j.eg3.repository.RecipeRepository;
+import com.rihanna.neo4j.eg3.util.SearchCriteriaConverter;
 
 @Service
 public class RecipeService {
@@ -45,13 +46,7 @@ public class RecipeService {
     }
 
     public Collection<Recipe> searchRecipeList(RecipeSearchDTO searchCriteria) {
-    	String query = "MATCH (nut:NutritionalValue)<-[r2:NUTRITIONAL_VALUE]-(n:Recipe)-[r:INGREDIENTS]->"
-    			+ "(m:Ingredient),(n)-[r3:TAGS]->(t:Tag) where (n.name =~ '(?i).*cash.*') "
-    			+ "return n,collect(r) as rr,collect(m) as mm,collect(nut) as nutnut,collect(t) as tt,"
-    			+ " collect(r2) as r2r2,collect(r3) as r3r3";
-    	
-    	Collection<Recipe> result = recipeRepository.findByCriteria(query);
-    	return result;
+    	return recipeRepository.findByCriteria(SearchCriteriaConverter.generateQuery(searchCriteria));
     }
     
     public Collection<Recipe> searchRecipe(Recipe recipe) {
