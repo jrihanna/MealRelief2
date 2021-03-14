@@ -29,7 +29,7 @@ public class Recipe {
 	private Set<Tag> tags;
 	
 	@Relationship(type = "isA", direction = Relationship.OUTGOING)
-	private CategoryEnum category;
+	private String category;
 	
 	@Relationship(type = "total_nutritions", direction = Relationship.UNDIRECTED)
 	private NutritionalValue nutritionalValue;
@@ -95,11 +95,11 @@ public class Recipe {
 		this.nutritionalValue = nutritionalValue;
 	}
 
-	public CategoryEnum getCategory() {
+	public String getCategory() {
 		return category;
 	}
 
-	public void setCategory(CategoryEnum category) {
+	public void setCategory(String category) {
 		this.category = category;
 	}
 

@@ -18,7 +18,14 @@ public class Ingredient {
 
 	@Relationship(type = "nutritions", direction = Relationship.UNDIRECTED)
 	private NutritionalValue nutritionalValue;	
-	private int perQuantity;
+	private Integer perQuantity;
+	
+	public Ingredient() {}
+
+	public Ingredient(String name) {
+		super();
+		this.name = name;
+	}
 
 	public Long getId() {
 		return id;
@@ -44,11 +51,11 @@ public class Ingredient {
 		this.nutritionalValue = nutritionalValue;
 	}
 
-	public int getPerQuantity() {
+	public Integer getPerQuantity() {
 		return perQuantity;
 	}
 
-	public void setPerQuantity(int perQuantity) {
+	public void setPerQuantity(Integer perQuantity) {
 		this.perQuantity = perQuantity;
 	}
 }

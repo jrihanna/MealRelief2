@@ -24,13 +24,13 @@ public class IngredientQuantity {
 	private Ingredient ingredient;
     
     @Property
-    private float quantity;
+    private Float quantity;
     
     @Property
-    private MeasurementTypeEnum measurementType;
+    private String measurementType;
 
     @Property
-    private float quantityGram;
+    private Float quantityGram;
     
 
 	public Long getId() {
@@ -51,22 +51,22 @@ public class IngredientQuantity {
 	public void setIngredient(Ingredient ingredient) {
 		this.ingredient = ingredient;
 	}
-	public float getQuantity() {
+	public Float getQuantity() {
 		return quantity;
 	}
-	public void setQuantity(float quantity) {
+	public void setQuantity(Float quantity) {
 		this.quantity = quantity;
 	}
-	public MeasurementTypeEnum getMeasurementType() {
+	public String getMeasurementType() {
 		return measurementType;
 	}
-	public void setMeasurementType(MeasurementTypeEnum measurementType) {
+	public void setMeasurementType(String measurementType) {
 		this.measurementType = measurementType;
 	}
-	public float getQuantityGram() {
+	public Float getQuantityGram() {
 		return quantityGram;
 	}
-	public void setQuantityGram(float quantityGram) {
+	public void setQuantityGram(Float quantityGram) {
 		this.quantityGram = quantityGram;
 	}
     

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.rihanna.neo4j.eg3.enumeration.CategoryEnum;
-import com.rihanna.neo4j.eg3.model.IngredientQuantity;
 import com.rihanna.neo4j.eg3.model.NutritionalValue;
 import com.rihanna.neo4j.eg3.model.Tag;
 
@@ -12,15 +11,15 @@ public class RecipeDTO {
 	
 private Long id;
 	
-	private String name;
+	private String recipeName;
 	private String instructions;
 	private String iconSrc;
 	
-	private List<IngredientQuantity> ingredients;
+	private List<IngredientQuantityDTO> ingredients;
 	
 	private Set<Tag> tags;
 	
-	private CategoryEnum category;
+	private String[] category;
 	
 	private NutritionalValue nutritionalValue;
 
@@ -31,13 +30,13 @@ private Long id;
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	public String getName() {
-		return name;
+	
+	public String getRecipeName() {
+		return recipeName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setRecipeName(String recipeName) {
+		this.recipeName = recipeName;
 	}
 
 	public String getInstructions() {
@@ -56,11 +55,11 @@ private Long id;
 		this.iconSrc = iconSrc;
 	}
 
-	public List<IngredientQuantity> getIngredients() {
+	public List<IngredientQuantityDTO> getIngredients() {
 		return ingredients;
 	}
 
-	public void setIngredients(List<IngredientQuantity> ingredients) {
+	public void setIngredients(List<IngredientQuantityDTO> ingredients) {
 		this.ingredients = ingredients;
 	}
 
@@ -72,11 +71,11 @@ private Long id;
 		this.tags = tags;
 	}
 
-	public CategoryEnum getCategory() {
+	public String[] getCategory() {
 		return category;
 	}
 
-	public void setCategory(CategoryEnum category) {
+	public void setCategory(String[] category) {
 		this.category = category;
 	}
 

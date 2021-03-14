@@ -12,4 +12,13 @@ public enum MeasurementTypeEnum {
 	public String getValue() {
 		return value;
 	}
+	
+	public static MeasurementTypeEnum fromString(String text) {
+        for (MeasurementTypeEnum b : MeasurementTypeEnum.values()) {
+            if (b.value.equalsIgnoreCase(text)) {
+                return b;
+            }
+        }
+        return null;
+    }
 }

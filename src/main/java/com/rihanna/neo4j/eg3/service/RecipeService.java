@@ -1,9 +1,12 @@
 package com.rihanna.neo4j.eg3.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -40,7 +43,7 @@ public class RecipeService {
     
     public void saveOrUpdateRecipe(Recipe recipe) {
     	recipe.setIngredients(loadIngredients(recipe));
-    	recipe.setNutritionalValue(nutritionCalculatorService.calculateNutritionsForRecipe(recipe));
+//    	recipe.setNutritionalValue(nutritionCalculatorService.calculateNutritionsForRecipe(recipe));
     	recipeRepository.save(recipe);
     	
     }
@@ -82,6 +85,43 @@ public class RecipeService {
     		rec.getTags().remove(tag);
     		recipeRepository.save(rec);
     	});
+    }
+    
+    public Optional<Recipe> findRecipeById(Long id) {
+    	return recipeRepository.findById(id);
+    }
+    
+    public Map<String, List<String>> generateGroceryList(List<Long> ids) {
+    	
+    	Map<String, List<String>> result = new HashMap<>();
+    	
+    	ids.stream().forEach(rId -> {
+    		Optional<Recipe> recipe = findRecipeById(rId);
+    		recipe.ifPresent(r -> {
+    			List<IngredientQuantity> ings = r.getIngredients();
+    			ings.forEach(ing -> {
+    				String measurement = ing.getMeasurementType() != null ? ing.getMeasurementType() : "gr";
+    				String quantity = ing.getQuantity().toString();
+    				if(quantity.endsWith(".0"))
+    					quantity = String.valueOf(ing.getQuantity().intValue());
+    				final String quantityString = quantity;
+    				result.computeIfPresent(ing.getIngredient().getName(), (in, currents) -> {
+    					String value = quantityString + " " + measurement;
+    					List<String> newList = new ArrayList<>();
+    					newList.addAll(currents);
+    					newList.add(value);
+    					return newList;
+    				});
+    				
+    				result.computeIfAbsent(ing.getIngredient().getName(), in -> {
+    					String value = quantityString + " " + measurement;
+    					return Arrays.asList(value);
+    				});
+    			});
+    		});
+    	});
+    	
+    	return result;
     }
     
     private List<IngredientQuantity> loadIngredients(Recipe recipe) {

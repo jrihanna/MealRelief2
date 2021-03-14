@@ -1,9 +1,14 @@
 package com.rihanna.neo4j.eg3.controller;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
+import org.codehaus.jettison.json.JSONObject;
+import org.eclipse.jetty.util.ajax.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
@@ -19,10 +24,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.rihanna.neo4j.eg3.controller.model.RecipeModelAttribute;
+import com.rihanna.neo4j.eg3.dto.IngredientQuantityDTO;
+import com.rihanna.neo4j.eg3.dto.RecipeDTO;
 import com.rihanna.neo4j.eg3.dto.RecipeSearchDTO;
 import com.rihanna.neo4j.eg3.dto.SearchResult;
+import com.rihanna.neo4j.eg3.enumeration.MeasurementTypeEnum;
+import com.rihanna.neo4j.eg3.model.Ingredient;
+import com.rihanna.neo4j.eg3.model.IngredientQuantity;
 import com.rihanna.neo4j.eg3.model.Recipe;
 import com.rihanna.neo4j.eg3.model.Tag;
+import com.rihanna.neo4j.eg3.service.IngredientService;
 import com.rihanna.neo4j.eg3.service.RecipeService;
 import com.rihanna.neo4j.eg3.util.SearchCriteriaConverter;
 
@@ -33,15 +44,33 @@ public class RecipeController {
 	
 	@Autowired
 	RecipeService recipeService;
+
+	@Autowired
+	IngredientService ingredientService;
 	
 	@GetMapping
     public @ResponseBody Collection<Recipe> getAll() {
     	return recipeService.getAllRecipes();
     }
-	
+
 	@PostMapping(path = "/add")
-    public String addRecipe(@RequestBody Recipe recipe) {
-    	recipeService.saveOrUpdateRecipe(recipe);
+    public String addRecipe(@RequestBody RecipeDTO recipe) {
+		Recipe r = new Recipe();
+		r.setIconSrc(recipe.getIconSrc());
+		r.setInstructions(recipe.getInstructions());
+		r.setIngredients(new ArrayList<IngredientQuantity>());
+		for(IngredientQuantityDTO inq : recipe.getIngredients()) {
+			IngredientQuantity iq = new IngredientQuantity();
+			iq.setIngredient(new Ingredient(inq.getIngredientName()));
+			iq.setQuantity(inq.getIngredientAmount());
+			iq.setMeasurementType(inq.getMeasurement());
+			
+			r.getIngredients().add(iq);
+		}
+		
+		r.setName(recipe.getRecipeName());
+		ingredientService.saveOrUpdateIngredientBatch(r.getIngredients());
+    	recipeService.saveOrUpdateRecipe(r);
     	return "success";
     }
 	
@@ -49,6 +78,14 @@ public class RecipeController {
     public String updateRecipe(@RequestBody Recipe recipe) {
     	recipeService.saveOrUpdateRecipe(recipe);
     	return "success";
+    }
+	
+	@GetMapping(path = "/grocery")
+	@ResponseBody
+    public String getGroceryList(@RequestParam List<Long> recipeIds) {
+		Map<String, List<String>> result = recipeService.generateGroceryList(recipeIds);
+		JSONObject j = new JSONObject(result);
+    	return j.toString();
     }
 	
 	@GetMapping(path = "/search_")
