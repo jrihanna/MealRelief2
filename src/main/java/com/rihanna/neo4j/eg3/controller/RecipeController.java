@@ -1,15 +1,22 @@
 package com.rihanna.neo4j.eg3.controller;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.codehaus.jettison.json.JSONObject;
-import org.eclipse.jetty.util.ajax.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,18 +30,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.rihanna.neo4j.eg3.controller.model.GroupSearchModelAttribute;
 import com.rihanna.neo4j.eg3.controller.model.RecipeModelAttribute;
+import com.rihanna.neo4j.eg3.dto.GroupSearchResult;
 import com.rihanna.neo4j.eg3.dto.IngredientQuantityDTO;
 import com.rihanna.neo4j.eg3.dto.RecipeDTO;
 import com.rihanna.neo4j.eg3.dto.RecipeSearchDTO;
 import com.rihanna.neo4j.eg3.dto.SearchResult;
-import com.rihanna.neo4j.eg3.enumeration.MeasurementTypeEnum;
 import com.rihanna.neo4j.eg3.model.Ingredient;
 import com.rihanna.neo4j.eg3.model.IngredientQuantity;
 import com.rihanna.neo4j.eg3.model.Recipe;
 import com.rihanna.neo4j.eg3.model.Tag;
 import com.rihanna.neo4j.eg3.service.IngredientService;
 import com.rihanna.neo4j.eg3.service.RecipeService;
+import com.rihanna.neo4j.eg3.util.PdfUtil;
 import com.rihanna.neo4j.eg3.util.SearchCriteriaConverter;
 
 @CrossOrigin(origins = {"http://localhost:3000"})
@@ -88,6 +100,36 @@ public class RecipeController {
     	return j.toString();
     }
 	
+	@PostMapping(path = "/pdf")
+	@ResponseBody
+    public ResponseEntity<InputStreamResource> getRecipePdfs(@RequestBody GroupSearchModelAttribute groupSearchModelAttribute) {
+		Map<Integer, List<Recipe>> recipesPerDay = recipeService.loadRecipesPerDay(groupSearchModelAttribute);
+		
+		PdfUtil pdfUtil = new PdfUtil();
+		try {
+			Document document = new Document();
+			PdfWriter.getInstance(document, new FileOutputStream("Recipes_For_This_Week.pdf"));
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			PdfWriter.getInstance(document, outputStream);
+
+			document = pdfUtil.generateRecipeListPdf(document, recipesPerDay);
+	        outputStream.close();
+ 
+	        HttpHeaders respHeaders = new HttpHeaders();
+            MediaType mediaType = MediaType.parseMediaType("application/pdf");
+            respHeaders.setContentType(mediaType);
+//            respHeaders.setContentLength(doc.length());
+            respHeaders.setContentDispositionFormData("attachment", "Recipes_For_This_Week.pdf");
+            InputStreamResource isr = new InputStreamResource(new ByteArrayInputStream(outputStream.toByteArray()));
+            return new ResponseEntity<InputStreamResource>(isr, respHeaders, HttpStatus.OK);
+        
+			 
+		} catch (DocumentException | IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+    }
+	
 	@GetMapping(path = "/search_")
     public @ResponseBody Collection<Recipe> searchRecipe_(@RequestBody Recipe recipe) {
     	return recipeService.searchRecipe(recipe);
@@ -113,19 +155,14 @@ public class RecipeController {
     }
 	
 	@GetMapping(path = "/search_group")
-    public @ResponseBody SearchResult searchGroupRecipe(
-    			@Nullable @RequestParam List<String> includedIngredients, 
-    			@Nullable @RequestParam List<String> excludedIngredients, 
-    			@Nullable @RequestParam List<String> tags) {
+    public @ResponseBody GroupSearchResult searchGroupRecipe(@ModelAttribute RecipeModelAttribute recipeModelAttribute) {
 		
-		// TODO: if all null then search random 10 recipes
-		Recipe recipe = new Recipe();
-		Collection<Recipe> result = recipeService.searchRecipe(recipe);
+		// TODO: if all null then search random x recipes
+		GroupSearchResult result = recipeService.searchRecipeGroup(recipeModelAttribute);
 		
-		SearchResult searchResult = new SearchResult();
-		searchResult.setRecipes(result);
-    	return searchResult;
+    	return result;
     }
+	
 	@PutMapping(path = "/tag/add/{id}")
     public String tagRecipe(@RequestBody Tag tag, @PathVariable Long id) {
     	recipeService.tagRecipe(tag, id);

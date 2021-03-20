@@ -17,7 +17,7 @@ public class SearchCriteriaConverter {
 		
 		RecipeSearchDTO dto = new RecipeSearchDTO();
 		dto.setName(rma.getRecipeName());
-		dto.setCategory(rma.getCategory() != null ? CategoryEnum.valueOf(rma.getCategory()) : null);
+		dto.setCategory(rma.getCategory());
 		dto.setIncludedIngredients(convertIngredients(rma.getIncludedIngredients()));
 		dto.setExcludedIngredients(convertIngredients(rma.getExcludedIngredients()));
 		dto.setTags(convertTags(rma.getTags()));
@@ -32,7 +32,8 @@ public class SearchCriteriaConverter {
     			+ addOptionals()
     			+ " return n, "
     			+ "collect(si) + collect(mi) as ings, collect(distinct rr) as ring, "
-    			+ "collect(t) + collect(ta) as allTags, collect(tt) as tas, collect(nutt) as nutts, collect(nut) as nuts";
+    			+ "collect(t) + collect(ta) as allTags, collect(tt) as tas, collect(nutt) as nutts, collect(nut) as nuts"
+    			+ addLimit(searchCriteria);
 	}
 	
 	private static List<IngredientDTO> convertIngredients(List<String> ingredientsNames) {
@@ -68,7 +69,7 @@ public class SearchCriteriaConverter {
 	    	if(sc.getCategory() != null) {
 	    		if(needsAnd)
 	    			whereClause += " and ";
-	    		whereClause += "n.category = '" + sc.getCategory().getValue() + "'";
+	    		whereClause += "n.category = '" + sc.getCategory() + "'";
 	    		needsAnd = true;
 	    	}
 	    	
@@ -144,4 +145,7 @@ public class SearchCriteriaConverter {
     	return false;
     }
 
+    private static String addLimit(RecipeSearchDTO searchCriteria) {
+    	return (searchCriteria.getLimit() > 0 ? " limit " + searchCriteria.getLimit() : "");
+    }
 }

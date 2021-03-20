@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -13,12 +14,21 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.rihanna.neo4j.eg3.controller.model.GroupSearchModelAttribute;
+import com.rihanna.neo4j.eg3.controller.model.RecipeModelAttribute;
+import com.rihanna.neo4j.eg3.dto.GroupSearchResult;
+import com.rihanna.neo4j.eg3.dto.IngredientDTO;
+import com.rihanna.neo4j.eg3.dto.NutritionalValueDTO;
+import com.rihanna.neo4j.eg3.dto.RecipeDTO;
 import com.rihanna.neo4j.eg3.dto.RecipeSearchDTO;
+import com.rihanna.neo4j.eg3.dto.TagDTO;
+import com.rihanna.neo4j.eg3.enumeration.CategoryEnum;
 import com.rihanna.neo4j.eg3.model.Ingredient;
 import com.rihanna.neo4j.eg3.model.IngredientQuantity;
 import com.rihanna.neo4j.eg3.model.Recipe;
 import com.rihanna.neo4j.eg3.model.Tag;
 import com.rihanna.neo4j.eg3.repository.RecipeRepository;
+import com.rihanna.neo4j.eg3.util.RecipeModelConverter;
 import com.rihanna.neo4j.eg3.util.SearchCriteriaConverter;
 
 @Service
@@ -50,6 +60,40 @@ public class RecipeService {
 
     public Collection<Recipe> searchRecipeList(RecipeSearchDTO searchCriteria) {
     	return recipeRepository.findByCriteria(SearchCriteriaConverter.generateQuery(searchCriteria));
+    }
+    
+    public GroupSearchResult searchRecipeGroup(RecipeModelAttribute recipeModelAttribute) {
+
+    	// divide nutrition by 3
+    	RecipeSearchDTO searchCriteria = convertToRecipeSearchDTO(recipeModelAttribute);
+    	
+    	// search 7 breakfast, 7 lunch, 7 dinner, 7 snack
+    	searchCriteria.setLimit(7);
+    	searchCriteria.setCategory(CategoryEnum.BREAKFAST.getValue());
+    	List<Recipe> breakfasts = recipeRepository.findByCriteria(SearchCriteriaConverter.generateQuery(searchCriteria));
+ 
+    	searchCriteria.setCategory(CategoryEnum.LUNCH.getValue());
+    	List<Recipe> lunches = recipeRepository.findByCriteria(SearchCriteriaConverter.generateQuery(searchCriteria));
+
+    	searchCriteria.setCategory(CategoryEnum.DINNER.getValue());
+    	List<Recipe> dinners = recipeRepository.findByCriteria(SearchCriteriaConverter.generateQuery(searchCriteria));
+
+    	searchCriteria.setCategory(CategoryEnum.SNACK.getValue());
+    	List<Recipe> snacks = recipeRepository.findByCriteria(SearchCriteriaConverter.generateQuery(searchCriteria));
+
+    	GroupSearchResult result = new GroupSearchResult();
+		Map<Integer, List<RecipeDTO>> mm = new HashMap<>();
+    	for(int i = 1; i <= 7; i++) {
+    		RecipeDTO breakfastI = breakfasts.size() >= i ? RecipeModelConverter.convertEntityToDTO(breakfasts.get(i)) : null;
+    		RecipeDTO lunchI = lunches.size() >= i ? RecipeModelConverter.convertEntityToDTO(lunches.get(i)) : null;
+    		RecipeDTO dinnerI = dinners.size() >= i ? RecipeModelConverter.convertEntityToDTO(dinners.get(i)) : null;
+    		RecipeDTO snackI = snacks.size() >= i ? RecipeModelConverter.convertEntityToDTO(snacks.get(i)) : null;
+    		
+    		mm.put(i, Arrays.asList(breakfastI, lunchI, dinnerI, snackI));
+    	}
+    	
+    	result.setRecipesPerDay(mm);
+    	return result;
     }
     
     public Collection<Recipe> searchRecipe(Recipe recipe) {
@@ -124,6 +168,23 @@ public class RecipeService {
     	return result;
     }
     
+    public Map<Integer, List<Recipe>> loadRecipesPerDay(GroupSearchModelAttribute groupSearchModelAttribute) {
+    	Map<Integer, List<Recipe>> recipePerDay = new HashMap<>();
+    	for(Integer i : groupSearchModelAttribute.getRecipePerDay().keySet()) {
+    		List<Long> recipeIdsPerDay = groupSearchModelAttribute.getRecipePerDay().get(i);
+    		List<Recipe> recipesPerDay = new ArrayList<>();
+    		
+    		for(Long recipeId : recipeIdsPerDay) {
+    			Recipe recipe = recipeRepository.findRecipeById(recipeId);
+    			recipesPerDay.add(recipe);
+    		}
+    		
+    		recipePerDay.put(i, recipesPerDay);
+    	}
+    	
+    	return recipePerDay;
+    }
+    
     private List<IngredientQuantity> loadIngredients(Recipe recipe) {
     	
     	List<IngredientQuantity> newIngre = new ArrayList<IngredientQuantity>();
@@ -140,6 +201,32 @@ public class RecipeService {
     }
     
 
+    private RecipeSearchDTO convertToRecipeSearchDTO(RecipeModelAttribute rma) {
+    	RecipeSearchDTO dto = new RecipeSearchDTO();
+    	dto.setCategory(rma.getCategory());
+    	
+    	if(rma.getExcludedIngredients() != null) {
+	    	dto.setExcludedIngredients(new ArrayList<>());
+	    	for(String ing : rma.getExcludedIngredients()) 
+	    		dto.getExcludedIngredients().add(new IngredientDTO(ing));
+    	}
+    	
+    	if(rma.getIncludedIngredients() != null) {
+	    	dto.setIncludedIngredients(new ArrayList<>());
+	    	for(String ing : rma.getIncludedIngredients()) 
+	    		dto.getIncludedIngredients().add(new IngredientDTO(ing));
+    	}
+    	
+    	dto.setMaxNutritionalValues(new NutritionalValueDTO(rma.getMaxCalory()/3, rma.getMaxCarb()/3, rma.getMaxFat()/3, rma.getMaxProtein()/3));
+    	dto.setMinNutritionalValues(new NutritionalValueDTO(rma.getMinCalory()/3, rma.getMinCarb()/3, rma.getMinFat()/3, rma.getMinProtein()/3));
+    	
+    	if(dto.getTags() != null) {
+	    	dto.setTags(new HashSet<>());
+	    	for(String tag : rma.getTags())
+	    		dto.getTags().add(new TagDTO(tag));
+    	}
+    	return dto;
+    }
 	/*
 	 * Actor daniel = new Actor("Daniel Radcliffe"); Movie goblet = new
 	 * Movie("Harry Potter and the Goblet of Fire"); Movie phoenix = new

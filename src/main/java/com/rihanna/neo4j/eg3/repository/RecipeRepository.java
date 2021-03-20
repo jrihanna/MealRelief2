@@ -23,6 +23,11 @@ public interface RecipeRepository extends Neo4jRepository<Recipe, Long> {
 			+ "return n,collect(r),collect(m),collect(nut),collect(t),collect(r2),collect(r3)")
 	Collection<Recipe> findByName(String recipeName);
 	
+	@Query("MATCH (nut:NutritionalValue)<-[r2:NUTRITIONAL_VALUE]-(n:Recipe)-[r:INGREDIENTS]->"
+			+ "(m:Ingredient),(n)-[r3:TAGS]->(t:Tag) where (id(n) =$recipeId) "
+			+ "return n,collect(r),collect(m),collect(nut),collect(t),collect(r2),collect(r3)")
+	Recipe findRecipeById(Long recipeId);
+	
 	@Query("MATCH (n:Recipe)-[:INGREDIENTS]-(m:Ingredient)"
 			+ " where (m.name in $ingredientNames) RETURN n")
 	Collection<Recipe> findByIngredients(List<String> ingredientNames);
@@ -44,8 +49,8 @@ public interface RecipeRepository extends Neo4jRepository<Recipe, Long> {
 	
 //	@Query("CALL custom.recipe('dg') YIELD ripe")
 	@Query("CALL apoc.cypher.run($filterQuery, null) " +
-			"YIELD value as v RETURN v.n, v.ings, v.ring, v.tas, v.allTags, v.nutts, v.nuts")
-	Collection<Recipe> findByCriteria(String filterQuery);
+			"YIELD value as v RETURN v.n, v.ings, v.ring, v.tas, v.allTags")//, v.nutts, v.nuts
+	List<Recipe> findByCriteria(String filterQuery);
 	
 	@Query("call apoc.custom.asProcedure('recipe', procedures.search_by_criteria_func,"
 			+ "'read',[['ripe', 'NODE']], [['name', 'STRING']]); ")

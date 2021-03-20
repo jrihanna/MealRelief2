@@ -9,13 +9,15 @@ public class RecipeSearchDTO {
 
 	private String name;
 	private String instructions;
+
+	private Set<TagDTO> tags;
+	private String category;
 	
 	private List<IngredientDTO> includedIngredients;
 	private List<IngredientDTO> excludedIngredients;
-	
-	private Set<TagDTO> tags;
-	
-	private CategoryEnum category;
+	private NutritionalValueDTO minNutritionalValues;
+	private NutritionalValueDTO maxNutritionalValues;
+	private int limit;
 
 	public List<IngredientDTO> getIncludedIngredients() {
 		return includedIngredients;
@@ -57,11 +59,35 @@ public class RecipeSearchDTO {
 		this.tags = tags;
 	}
 
-	public CategoryEnum getCategory() {
+	public String getCategory() {
 		return category;
 	}
 
-	public void setCategory(CategoryEnum category) {
+	public void setCategory(String category) {
 		this.category = category;
+	}
+
+	public NutritionalValueDTO getMinNutritionalValues() {
+		return minNutritionalValues;
+	}
+
+	public void setMinNutritionalValues(NutritionalValueDTO minNutritionalValues) {
+		this.minNutritionalValues = minNutritionalValues;
+	}
+
+	public NutritionalValueDTO getMaxNutritionalValues() {
+		return maxNutritionalValues;
+	}
+
+	public void setMaxNutritionalValues(NutritionalValueDTO maxNutritionalValues) {
+		this.maxNutritionalValues = maxNutritionalValues;
+	}
+
+	public int getLimit() {
+		return limit;
+	}
+
+	public void setLimit(int limit) {
+		this.limit = limit;
 	}
 }

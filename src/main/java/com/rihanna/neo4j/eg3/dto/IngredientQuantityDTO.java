@@ -6,6 +6,15 @@ public class IngredientQuantityDTO {
 	private float ingredientAmount;
 	private String measurement;
 	
+	public IngredientQuantityDTO() {}
+	
+	public IngredientQuantityDTO(String ingredientName, float ingredientAmount, String measurement) {
+		super();
+		this.ingredientName = ingredientName;
+		this.ingredientAmount = ingredientAmount;
+		this.measurement = measurement;
+	}
+	
 	public String getIngredientName() {
 		return ingredientName;
 	}

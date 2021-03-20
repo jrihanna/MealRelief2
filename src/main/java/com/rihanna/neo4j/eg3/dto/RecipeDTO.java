@@ -3,13 +3,9 @@ package com.rihanna.neo4j.eg3.dto;
 import java.util.List;
 import java.util.Set;
 
-import com.rihanna.neo4j.eg3.enumeration.CategoryEnum;
-import com.rihanna.neo4j.eg3.model.NutritionalValue;
-import com.rihanna.neo4j.eg3.model.Tag;
-
 public class RecipeDTO {
 	
-private Long id;
+	private Long id;
 	
 	private String recipeName;
 	private String instructions;
@@ -17,11 +13,11 @@ private Long id;
 	
 	private List<IngredientQuantityDTO> ingredients;
 	
-	private Set<Tag> tags;
+	private Set<TagDTO> tags;
 	
 	private String[] category;
 	
-	private NutritionalValue nutritionalValue;
+	private NutritionalValueDTO nutritionalValue;
 
 	public Long getId() {
 		return id;
@@ -63,11 +59,11 @@ private Long id;
 		this.ingredients = ingredients;
 	}
 
-	public Set<Tag> getTags() {
+	public Set<TagDTO> getTags() {
 		return tags;
 	}
 
-	public void setTags(Set<Tag> tags) {
+	public void setTags(Set<TagDTO> tags) {
 		this.tags = tags;
 	}
 
@@ -79,11 +75,11 @@ private Long id;
 		this.category = category;
 	}
 
-	public NutritionalValue getNutritionalValue() {
+	public NutritionalValueDTO getNutritionalValue() {
 		return nutritionalValue;
 	}
 
-	public void setNutritionalValue(NutritionalValue nutritionalValue) {
+	public void setNutritionalValue(NutritionalValueDTO nutritionalValue) {
 		this.nutritionalValue = nutritionalValue;
 	}
 	
