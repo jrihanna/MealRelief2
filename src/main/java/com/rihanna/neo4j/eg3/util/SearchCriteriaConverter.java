@@ -9,7 +9,6 @@ import com.rihanna.neo4j.eg3.controller.model.RecipeModelAttribute;
 import com.rihanna.neo4j.eg3.dto.IngredientDTO;
 import com.rihanna.neo4j.eg3.dto.RecipeSearchDTO;
 import com.rihanna.neo4j.eg3.dto.TagDTO;
-import com.rihanna.neo4j.eg3.enumeration.CategoryEnum;
 
 public class SearchCriteriaConverter {
 	

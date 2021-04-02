@@ -8,8 +8,10 @@ public class IngredientDTO {
 
 	private String name;
 
-	private NutritionalValue nutritionalValue;
-	private int perQuantity;
+	private NutritionalValueDTO nutritionalValue;
+//	private int perQuantity;
+	private String measurement;
+	private String category;
 	
 	public IngredientDTO() {
 	}
@@ -33,20 +35,26 @@ public class IngredientDTO {
 		this.name = name;
 	}
 
-	public NutritionalValue getNutritionalValue() {
+	public NutritionalValueDTO getNutritionalValue() {
 		return nutritionalValue;
 	}
 
-	public void setNutritionalValue(NutritionalValue nutritionalValue) {
+	public void setNutritionalValue(NutritionalValueDTO nutritionalValue) {
 		this.nutritionalValue = nutritionalValue;
 	}
 
-	public int getPerQuantity() {
-		return perQuantity;
+	public String getMeasurement() {
+		return measurement;
 	}
-
-	public void setPerQuantity(int perQuantity) {
-		this.perQuantity = perQuantity;
+	
+	public void setMeasurement(String measurement) {
+		this.measurement = measurement;
+	}
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 }

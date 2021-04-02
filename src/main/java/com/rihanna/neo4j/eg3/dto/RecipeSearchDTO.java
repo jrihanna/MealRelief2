@@ -3,8 +3,6 @@ package com.rihanna.neo4j.eg3.dto;
 import java.util.List;
 import java.util.Set;
 
-import com.rihanna.neo4j.eg3.enumeration.CategoryEnum;
-
 public class RecipeSearchDTO {
 
 	private String name;

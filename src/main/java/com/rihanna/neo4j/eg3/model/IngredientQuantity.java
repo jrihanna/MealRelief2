@@ -8,8 +8,6 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.RelationshipProperties;
 import org.springframework.data.neo4j.core.schema.TargetNode;
 
-import com.rihanna.neo4j.eg3.enumeration.MeasurementTypeEnum;
-
 @RelationshipProperties
 public class IngredientQuantity {
 	@Id

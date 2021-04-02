@@ -28,7 +28,7 @@ public class NutritionCalculatorService {
 		return result;
 	}
 	
-	private Integer calculateTotal(Integer raw, IngredientQuantity ingQuan) {
-		return Float.valueOf(((raw * ingQuan.getQuantity()) / ingQuan.getIngredient().getPerQuantity())).intValue();
+	private Float calculateTotal(Float raw, IngredientQuantity ingQuan) {
+		return (raw * ingQuan.getQuantity()) / ingQuan.getIngredient().getPerQuantity();
 	}
 }

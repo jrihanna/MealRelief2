@@ -19,6 +19,8 @@ public class Ingredient {
 	@Relationship(type = "nutritions", direction = Relationship.UNDIRECTED)
 	private NutritionalValue nutritionalValue;	
 	private Integer perQuantity;
+	private String measurement;
+	private String category;
 	
 	public Ingredient() {}
 
@@ -57,5 +59,21 @@ public class Ingredient {
 
 	public void setPerQuantity(Integer perQuantity) {
 		this.perQuantity = perQuantity;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public String getMeasurement() {
+		return measurement;
+	}
+
+	public void setMeasurement(String measurement) {
+		this.measurement = measurement;
 	}
 }

@@ -10,12 +10,22 @@ public class NutritionalValue {
 	@Id
 	@GeneratedValue
 	private Long id;
-	private Integer calory;
-	private Integer carbs;
-	private Integer fat;
-	private Integer protein;
+	private Float calory;
+	private Float carbs;
+	private Float fat;
+	private Float protein;
 	
-	public void addValues(Integer calory, Integer carbs, Integer fat, Integer protein) {
+	public NutritionalValue() {}
+	
+	public NutritionalValue(Float calory, Float carbs, Float fat, Float protein) {
+		super();
+		this.calory = calory;
+		this.carbs = carbs;
+		this.fat = fat;
+		this.protein = protein;
+	}
+
+	public void addValues(Float calory, Float carbs, Float fat, Float protein) {
 		this.calory += calory;
 		this.carbs += carbs;
 		this.fat += fat;
@@ -28,28 +38,28 @@ public class NutritionalValue {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Integer getCalory() {
+	public Float getCalory() {
 		return calory;
 	}
-	public void setCalory(Integer calory) {
+	public void setCalory(Float calory) {
 		this.calory = calory;
 	}
-	public Integer getCarbs() {
+	public Float getCarbs() {
 		return carbs;
 	}
-	public void setCarbs(Integer carbs) {
+	public void setCarbs(Float carbs) {
 		this.carbs = carbs;
 	}
-	public Integer getFat() {
+	public Float getFat() {
 		return fat;
 	}
-	public void setFat(Integer fat) {
+	public void setFat(Float fat) {
 		this.fat = fat;
 	}
-	public Integer getProtein() {
+	public Float getProtein() {
 		return protein;
 	}
-	public void setProtein(Integer protein) {
+	public void setProtein(Float protein) {
 		this.protein = protein;
 	}
 }
